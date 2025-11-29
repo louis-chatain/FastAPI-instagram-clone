@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from database.models import DbUser
 from schemas.schemas_user import UserModel
 from sqlalchemy.orm.session import Session
@@ -35,4 +36,13 @@ def update(id: str, request: UserModel, db: Session):
     )
     db.commit()
     user = db.query(DbUser).filter_by(id=id).first()
+    return user
+
+
+def delete(id: int, db: Session):
+    user = db.query(DbUser).filter_by(id=id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There is no user with the id {id} in the database.")
+    db.delete(user)
+    db.commit()
     return user

@@ -22,3 +22,8 @@ def read_all(db: Session = Depends(get_db)):
 def update(id: int, request: UserModel, db: Session = Depends(get_db)):
     user = db_user.update(id, request, db)
     return user
+
+@router.delete("/delete", response_model=UserDisplay)
+def delete(id: int, db: Session = Depends(get_db)):
+    deleted_user = db_user.delete(id, db)
+    return deleted_user

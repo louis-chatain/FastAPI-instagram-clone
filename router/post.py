@@ -4,8 +4,10 @@ import string
 from typing import List
 from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm.session import Session
+from auth.oauth2 import get_current_user
 from database import db_post
 from database.database import get_db
+from schemas.schemas_auth import UserAuth
 from schemas.schemas_post import PostDisplay, PostModel
 
 
@@ -18,7 +20,7 @@ def create(request: PostModel, db: Session = Depends(get_db)):
     return post
 
 @router.get("/read_all", response_model=List[PostDisplay])
-def read_all(db: Session = Depends(get_db)):
+def read_all(db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     posts = db_post.read_all(db)
     return posts
 

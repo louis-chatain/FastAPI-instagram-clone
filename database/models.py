@@ -10,7 +10,7 @@ class DbUser(Base):
     email = Column(String)
     hashed_password = Column(String)
 
-    items = relationship('DbPost', back_populates='users')
+    items = relationship('DbPost', back_populates='users')  # variable "items" must be the same in schemas_user
 
 
 class DbPost(Base):

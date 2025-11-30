@@ -1,5 +1,8 @@
+import random
+import shutil
+import string
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm.session import Session
 from database import db_post
 from database.database import get_db
@@ -14,7 +17,7 @@ def create(request: PostModel, db: Session = Depends(get_db)):
     post = db_post.create(request, db)
     return post
 
-@router.get("/real_all", response_model=List[PostDisplay])
+@router.get("/read_all", response_model=List[PostDisplay])
 def read_all(db: Session = Depends(get_db)):
     posts = db_post.read_all(db)
     return posts
@@ -28,3 +31,17 @@ def update(id: int, request: PostModel, db: Session = Depends(get_db)):
 def delete(id: int, db: Session = Depends(get_db)):
     deleted_post = db_post.delete(id, db)
     return deleted_post
+
+
+@router.post('/image')
+def upload_image(image: UploadFile = File(Ellipsis)):
+  letters = string.ascii_letters
+  rand_str = ''.join(random.choice(letters) for i in range(6))
+  new = f'_{rand_str}.'
+  filename = new.join(image.filename.rsplit('.', 1))
+  path = f'images/{filename}'
+
+  with open(path, "w+b") as buffer:
+    shutil.copyfileobj(image.file, buffer)
+  
+  return {'filename': path}

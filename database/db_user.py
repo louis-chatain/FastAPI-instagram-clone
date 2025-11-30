@@ -23,8 +23,23 @@ def read_all(db: Session):
     return users
 
 
+def get_user_by_username(db: Session, username: str):
+    user = db.query(DbUser).filter_by(username=username).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"There is no user with the username {username} in the database.",
+        )
+    return user
+
+
 def read_by_id(id: str, db: Session):
     user = db.query(DbUser).filter_by(id=id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"There is no user with the id {id} in the database.",
+        )
     return user
 
 
@@ -34,7 +49,10 @@ def update(id: str, request: UserModel, db: Session):
         {
             DbUser.username: request.username,
             DbUser.email: request.email,
-            DbUser.hashed_password: request.password,
+            DbUser.hashed_password: generate_password_hash(
+                                        request.password,
+                                        method="pbkdf2:sha1",
+                                        salt_length=8),
         }
     )
     db.commit()

@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from fastapi import HTTPException, status
 from database.models import DbUser
 from schemas.schemas_user import UserModel
@@ -8,7 +9,9 @@ def create(request: UserModel, db: Session):
     new_user = DbUser(
         username=request.username,
         email=request.email,
-        hashed_password=request.password,
+        hashed_password=generate_password_hash(
+            request.password, method="pbkdf2:sha1", salt_length=8
+        ),
     )
     db.add(new_user)
     db.commit()
@@ -42,7 +45,10 @@ def update(id: str, request: UserModel, db: Session):
 def delete(id: int, db: Session):
     user = db.query(DbUser).filter_by(id=id).first()
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There is no user with the id {id} in the database.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"There is no user with the id {id} in the database.",
+        )
     db.delete(user)
     db.commit()
     return user

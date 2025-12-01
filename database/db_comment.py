@@ -26,7 +26,7 @@ def read_by_id(id: str, db: Session):
     return comment
 
 
-def update(id: str, request: CommentModel, db: Session):
+def update(id: int, request: CommentModel, db: Session):
     post = db.query(DbComment).filter_by(id=id)
     post.update(
         {

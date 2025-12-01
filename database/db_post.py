@@ -27,7 +27,7 @@ def read_by_id(id: str, db: Session):
     return post
 
 
-def update(id: str, request: PostModel, db: Session):
+def update(id: int, request: PostModel, db: Session):
     post = db.query(DbPost).filter_by(id=id)
     post.update(
         {

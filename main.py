@@ -11,7 +11,7 @@ app.include_router(user.router)
 app.include_router(comment.router)
 app.include_router(authentication.router)
 
-origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 # Access-Control-Allow-Origin
 app.add_middleware(

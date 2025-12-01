@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from fastapi import HTTPException, status
 from database.models import DbUser
 from schemas.schemas_user import UserModel
@@ -43,7 +43,7 @@ def read_by_id(id: str, db: Session):
     return user
 
 
-def update(id: str, request: UserModel, db: Session):
+def update(id: int, request: UserModel, db: Session):
     user = db.query(DbUser).filter_by(id=id)
     user.update(
         {

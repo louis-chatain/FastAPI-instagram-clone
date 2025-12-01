@@ -14,7 +14,7 @@ def create(request: CommentModel, db: Session = Depends(get_db)):
     return comment
 
 
-@router.get("/real_all", response_model=List[CommentDisplay])
+@router.get("/read_all", response_model=List[CommentDisplay])
 def read_all(db: Session = Depends(get_db)):
     comment = db_comment.read_all(db)
     return comment

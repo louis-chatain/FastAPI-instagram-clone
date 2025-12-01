@@ -13,7 +13,7 @@ def create(request: UserModel, db: Session = Depends(get_db)):
     user = db_user.create(request, db)
     return user
 
-@router.get("/real_all", response_model=List[UserDisplay])
+@router.get("/read_all", response_model=List[UserDisplay])
 def read_all(db: Session = Depends(get_db)):
     users = db_user.read_all(db)
     return users

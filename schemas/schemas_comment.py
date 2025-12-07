@@ -3,9 +3,9 @@ from datetime import date
 
 class CommentModel(BaseModel):  # data that we will demand/receive from the user
     text: str
-    username: str
+    post_id: int
 
-
+#--------------------------------------------------------------------------
 
 class Post(BaseModel):
     id: int

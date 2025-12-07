@@ -15,35 +15,83 @@ router = APIRouter(prefix="/post", tags=["post"])
 
 
 @router.post("/create", response_model=PostDisplay)
-def create(request: PostModel, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
-    post = db_post.create(request, db)
+def create(
+    request: PostModel,
+    db: Session = Depends(get_db),
+    current_user: UserAuth = Depends(get_current_user),
+):
+    post = db_post.create(request, current_user, db)
     return post
+
 
 @router.get("/read_all", response_model=List[PostDisplay])
 def read_all(db: Session = Depends(get_db)):
     posts = db_post.read_all(db)
     return posts
 
-@router.put("/update", response_model=PostDisplay)
-def update(id: int, request: PostModel, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
-    post = db_post.update(id, request, db)
+
+@router.get("/read_current_user", response_model=List[PostDisplay])
+def read_current_user(
+    db: Session = Depends(get_db),
+    current_user: UserAuth = Depends(get_current_user)
+):
+    post = db_post.read_current_user(db, current_user)
     return post
 
+
+@router.put(
+    "/update",
+    response_model=PostDisplay,
+    responses={
+        403: {
+            "description": "Forbidden - User is not the author of this post or the post does not exist.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "User 123 is not authorized to update post 456."
+                    }
+                }
+            },
+        },
+        404: {
+            "description": "Not Found - This post was not found or does not exist in the database.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Post with id 123 was not found."}
+                }
+            },
+        },
+    },
+)
+def update(
+    id: int,
+    request: PostModel,
+    db: Session = Depends(get_db),
+    current_user: UserAuth = Depends(get_current_user),
+):
+    post = db_post.update(id, request, current_user, db)
+    return post
+
+
 @router.delete("/delete", response_model=PostDisplay)
-def delete(id: int, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
-    deleted_post = db_post.delete(id, db)
+def delete(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: UserAuth = Depends(get_current_user),
+):
+    deleted_post = db_post.delete(id, current_user, db)
     return deleted_post
 
 
-@router.post('/image')
-def upload_image(image: UploadFile = File(Ellipsis), current_user: UserAuth = Depends(get_current_user)):
-  letters = string.ascii_letters
-  rand_str = ''.join(random.choice(letters) for i in range(6))
-  new = f'_{rand_str}.'
-  filename = new.join(image.filename.rsplit('.', 1))
-  path = f'images/{filename}'
+@router.post("/image", dependencies=[Depends(get_current_user)])
+def upload_image(image: UploadFile = File(Ellipsis)):
+    letters = string.ascii_letters
+    rand_str = "".join(random.choice(letters) for i in range(6))
+    new = f"_{rand_str}."
+    filename = new.join(image.filename.rsplit(".", 1))
+    path = f"images/{filename}"
 
-  with open(path, "w+b") as buffer:
-    shutil.copyfileobj(image.file, buffer)
-  
-  return {'filename': path}
+    with open(path, "w+b") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    return {"filename": path}

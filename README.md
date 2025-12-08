@@ -1,9 +1,9 @@
 # Louis Chatain
-<hr>
+
 description.
 
 # Technologies
-<hr>
+
 <ul>
     <li>Python</li>
     <li>FastApi</li>
@@ -16,7 +16,7 @@ description.
 </ul>
 
 # Features
-<hr>
+
 Here's what you can do with this API:
 <ul>
     <li>CRUD opration on a User, Post and Comment.</li>
@@ -27,7 +27,7 @@ Here's what you can do with this API:
 </ul>
 
 # The Process
-<hr>
+
 
 1. Project Setup and Dependencies
 
@@ -55,9 +55,9 @@ Here's what you can do with this API:
 
 4. CRUD Operations Implementation
 
-    User: Developed endpoints for creating a user (POST /users) and fetching user details (often protected).
+    User: Developed endpoints for creating a user and fetching user details.
 
-    Post: Implemented CRUD operations (CREATE, READ, UPDATE, DELETE) for posts, ensuring that only the post's owner can modify or delete their post.
+    Post: Implemented CRUD operations for posts, ensuring that only the post's owner can modify or delete their post.
 
     Comment: Developed endpoints for creating a comment under a specific post, and for retrieving comments associated with a post.
 
@@ -72,7 +72,7 @@ Here's what you can do with this API:
 Funny thing is, as soon as i started to document what i was coding, it made me realise that we have a better understanding when we document our own code. I think this is a good practice to follow when learning.
 
 # What I Learned
-<hr>
+
 
 1. Object-Relational Mapping (ORM)
 
@@ -99,7 +99,7 @@ Each part of this project helped me understand more about building apps, managin
 It was about solving problems, learning new things, and improving my skills for future work.
 
 # How can it be improved?
-<hr>
+
 <ul>
     <li>Plan out in advence the structure of the project. (Learned it the hard way.)</li>
     <li>Add video uploads.</li>
@@ -108,7 +108,7 @@ It was about solving problems, learning new things, and improving my skills for 
 </ul>
 
 # Running The Project
-<hr>
+
 To run the project in your local environment, follow these steps:
 
 1.Clone the repository to your local machine.
@@ -117,7 +117,3 @@ To run the project in your local environment, follow these steps:
 4.Check the "launch.sh" file to potentially change the host or/and port.
 5.Run the lauch.sh file.
 6.Open http://127.0.0.1:8000/docs (or the address shown in your console) in your web browser to view the Swagger documentation.
-
-
-# Video
-<hr>

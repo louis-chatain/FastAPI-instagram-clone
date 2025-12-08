@@ -11,7 +11,7 @@ class DbUser(Base):
     email: Column[str] = Column(String)
     hashed_password: Column[str] = Column(String)
 
-    items = relationship( # variable "items" must be the same in schemas_user
+    posts = relationship( # variable "items" must be the same in schemas_user
         'DbPost',
         back_populates='users',
         cascade="all, delete-orphan",
@@ -25,10 +25,11 @@ class DbPost(Base):
     image_url: Column[str] = Column(String)
     image_url_type: Column[str] = Column(String)
     caption: Column[str] = Column(String)
+
     timestamp: Column[date] = Column(Date)
 
     users_id: Column[int] = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'))
-    users = relationship('DbUser', back_populates='items')   
+    users = relationship('DbUser', back_populates='posts')
 
     comments = relationship(
         'DbComment',
@@ -44,8 +45,7 @@ class DbComment(Base):
     text: Column[str] = Column(String)
     timestamp: Column[date] = Column(Date)
 
-    # user_id: Column[int] = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'))
-    username: Column[str] = Column(String, ForeignKey('user.username', ondelete='CASCADE'))
+    user_id: Column[int] = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'))
 
     post_id: Column[int] = Column(Integer, ForeignKey('post.id', ondelete='CASCADE'))
     post = relationship("DbPost", back_populates="comments")

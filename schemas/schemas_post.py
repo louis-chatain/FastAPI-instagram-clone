@@ -22,7 +22,6 @@ class User(BaseModel):
 class Comment(BaseModel):
     id: int
     text: str
-    username: str
 
     class ConfigDict:
         from_attributes = True
@@ -33,7 +32,6 @@ class PostDisplay(BaseModel):
     image_url_type: str
     caption: str
     timestamp: date
-    users_id: int
     users: User
     comments: List[Comment] = []
 

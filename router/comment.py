@@ -3,14 +3,16 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 from database import db_comment
 from database.database import get_db
-from schemas.schemas_comment import CommentDisplay, CommentModel
+from schemas.schemas_comment import CommentDisplay, CommentModel, CommentUpdateModel
+from auth.oauth2 import get_current_user
+from schemas.schemas_auth import UserAuth
 
 router = APIRouter(prefix="/comment", tags=["comment"])
 
 
 @router.post("/create", response_model=CommentDisplay)
-def create(request: CommentModel, db: Session = Depends(get_db)):
-    comment = db_comment.create(request, db)
+def create(request: CommentModel, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
+    comment = db_comment.create(request, current_user, db)
     return comment
 
 
@@ -21,12 +23,12 @@ def read_all(db: Session = Depends(get_db)):
 
 
 @router.put("/update", response_model=CommentDisplay)
-def update(id: int, request: CommentModel, db: Session = Depends(get_db)):
-    comment = db_comment.update(id, request, db)
+def update(request: CommentUpdateModel, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
+    comment = db_comment.update(request, current_user, db)
     return comment
 
 
-@router.delete("/delete", response_model=CommentDisplay)
-def delete(id: int, db: Session = Depends(get_db)):
-    deleted_comment = db_comment.delete(id, db)
+@router.delete("/delete", response_model=None)
+def delete(id: int, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
+    deleted_comment = db_comment.delete(id, current_user, db)
     return deleted_comment

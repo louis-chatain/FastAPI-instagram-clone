@@ -14,7 +14,7 @@ def create(request: PostModel, current_user: UserAuth, db: Session):
             image_url_type=request.image_url_type,
             caption=request.caption,
             timestamp=datetime.now().date(),
-            users_id=current_user.id,
+            users_id=current_user.id
         )
         db.add(new_post)
         db.commit()

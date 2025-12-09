@@ -3,14 +3,14 @@ from fastapi.testclient import TestClient
 
 def test_create_user(client: TestClient):
     response = client.post("/user/create", json={"username": "chat", "email": "chat", "password": "chat"})
-    assert response.status_code == 200
+    assert response.status_code == 201
+    response = client.get("/user/read_all")
+    assert response.json()[0].get("id") == 1
+    assert response.json()[0].get("username") == "chat"
+    assert response.json()[0].get("email") == "chat"
+    assert response.json()[0].get("posts") == []
     
-    assert response.json().get("id") == 1
-    assert response.json().get("username") == "chat"
-    assert response.json().get("email") == "chat"
-    assert response.json().get("posts") == []
-    
-def test_read_user(client: TestClient):
+def test_read_all_user(client: TestClient):
     client.post("/user/create", json={"username": "chat", "email": "chat", "password": "chat"})
     client.post("/user/create", json={"username": "cat", "email": "cat", "password": "cat"})
     
@@ -71,6 +71,6 @@ def test_delete_user(client: TestClient):
         "/user/delete",
         headers={"Authorization": f"bearer {access_token}"}
         )
-    assert response.status_code == 200
+    assert response.status_code == 204
     
     # response = client.get("/user/read_all")

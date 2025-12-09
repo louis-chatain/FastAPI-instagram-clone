@@ -26,7 +26,7 @@ def create(request: UserModel, db: Session):
             detail="An error occurred while saving changes to the database.",
         )
 
-    return new_user
+    return {"detail": "New User has been successfully added to the database."}
 
 
 def read_all(db: Session):
@@ -79,8 +79,7 @@ def update(request: UserModel, db: Session, current_user: UserAuth):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while saving changes to the database.",
         )
-    user = db.query(DbUser).filter_by(id=current_user.id).first()
-    return user
+    return {"detail": "User has been successfully updated to the database."}
 
 
 def delete(db: Session, current_user: UserAuth):
@@ -100,4 +99,4 @@ def delete(db: Session, current_user: UserAuth):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while saving changes to the database."
         )
-    return user
+    return None

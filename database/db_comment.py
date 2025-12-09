@@ -10,10 +10,10 @@ from sqlalchemy import exc
 def create(request: CommentModel, current_user: UserAuth, db: Session):
     try:
         new_comment = DbComment(
-            text = request.text,
-            timestamp = datetime.now().date(),
-            user_id = current_user.id,
-            post_id = request.post_id,
+            text=request.text,
+            timestamp=datetime.now().date(),
+            user_id=current_user.id,
+            post_id=request.post_id,
         )
         db.add(new_comment)
         db.commit()
@@ -24,7 +24,7 @@ def create(request: CommentModel, current_user: UserAuth, db: Session):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while saving changes to the database.",
         )
-    return new_comment
+    return {"detail": "New comment has been successfully added to the database."}
 
 
 def read_all(db: Session):
@@ -38,13 +38,15 @@ def read_by_id(id: str, db: Session):
 
 
 def update(request: CommentUpdateModel, current_user: UserAuth, db: Session):
-    comment = db.query(DbComment).filter(DbComment.id == request.id, DbComment.user_id == current_user.id)
+    comment = db.query(DbComment).filter(
+        DbComment.id == request.id, DbComment.user_id == current_user.id
+    )
     if not comment.first():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User {current_user.id} is not authorized to update comment with id {id}, or the comment does not exist.",
+            detail=f"User {current_user.id} is not authorized to update comment with id {request.id}, or the comment does not exist.",
         )
-    
+
     try:
         comment.update(
             {
@@ -59,16 +61,19 @@ def update(request: CommentUpdateModel, current_user: UserAuth, db: Session):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while saving changes to the database.",
         )
-    comment = db.query(DbComment).filter(DbComment.id == request.id).first()
-    return comment
+    return {"detail": "Comment has been successfully updated to the database."}
 
 
 def delete(id: int, current_user: UserAuth, db: Session):
-    comment = db.query(DbComment).filter(DbComment.id == id, DbComment.user_id == current_user.id).first()
+    comment = (
+        db.query(DbComment)
+        .filter(DbComment.id == id, DbComment.user_id == current_user.id)
+        .first()
+    )
     if not comment:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"There is no user with the id {id} in the database."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"You are not the author of that comment or There is no comment with the id {id} in the database.",
         )
     try:
         db.delete(comment)
@@ -78,6 +83,6 @@ def delete(id: int, current_user: UserAuth, db: Session):
         print(f"Database error during deletion: {e}")
         HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while saving changes to the database."
+            detail="An error occurred while saving changes to the database.",
         )
-    return comment
+    return None

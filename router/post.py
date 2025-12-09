@@ -1,6 +1,7 @@
 import random
 import shutil
 import string
+from fastapi import status
 from typing import List
 from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm.session import Session
@@ -14,7 +15,23 @@ from schemas.schemas_post import PostDisplay, PostModel
 router = APIRouter(prefix="/post", tags=["post"])
 
 
-@router.post("/create", response_model=PostDisplay)
+@router.post(
+    "/create",
+    response_model=None,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {
+            "description": "Created - User has been created",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "New User has been succefully added to the database."
+                    }
+                }
+            },
+        },
+    }
+    )
 def create(
     request: PostModel,
     db: Session = Depends(get_db),
@@ -32,8 +49,7 @@ def read_all(db: Session = Depends(get_db)):
 
 @router.get("/read_current_user", response_model=PostDisplay)
 def read_current_user(
-    db: Session = Depends(get_db),
-    current_user: UserAuth = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)
 ):
     post = db_post.read_current_user(db, current_user)
     return post
@@ -41,7 +57,7 @@ def read_current_user(
 
 @router.put(
     "/update",
-    response_model=PostDisplay,
+    response_model=None,
     responses={
         403: {
             "description": "Forbidden - User is not the author of this post or the post does not exist.",
@@ -61,6 +77,16 @@ def read_current_user(
                 }
             },
         },
+        200: {
+            "description": "Updated - Post has been updated",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Post has been successfully updated to the database."
+                    }
+                }
+            },
+        },
     },
 )
 def update(
@@ -73,7 +99,7 @@ def update(
     return post
 
 
-@router.delete("/delete", response_model=PostDisplay)
+@router.delete("/delete", response_model=None, status_code=status.HTTP_204_NO_CONTENT)
 def delete(
     id: int,
     db: Session = Depends(get_db),

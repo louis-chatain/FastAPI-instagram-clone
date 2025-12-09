@@ -26,7 +26,7 @@ def create(request: PostModel, current_user: UserAuth, db: Session):
             detail="An error occurred while saving changes to the database.",
         )
 
-    return new_post
+    return {"detail": "New Post has been successfully added to the database."}
 
 
 def read_all(db: Session):
@@ -37,9 +37,9 @@ def read_all(db: Session):
 def read_current_user(db: Session, current_user: UserAuth):
     post = db.query(DbPost).filter_by(id=current_user.id).first()
     if not post:
-        raise HTTPException(
+        raise HTTPException( #TODO if a user does not have any post, should not be a httpexception
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No post with id {id} found or the post does not exist.",
+            detail=f"No post with id {id} found or the post does not exist.", 
         )
     return post
 
@@ -68,14 +68,12 @@ def update(id: int, request: PostModel, current_user: UserAuth, db: Session):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while saving changes to the database.",
         )
-
-    post = db.query(DbPost).filter(DbPost.id == id).first()
-    return post
+    return {"detail": "Post has been successfully updated to the database."}
 
 
 def delete(id: int, current_user: UserAuth, db: Session):
-    post = db.query(DbPost).filter(DbPost.id == id, DbPost.users_id == current_user.id)
-    if not post.first():
+    post = db.query(DbPost).filter(DbPost.id == id, DbPost.users_id == current_user.id).first()
+    if not post:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"User {current_user.id} is not authorized to update post with id {id}, or the post does not exist.",
@@ -91,4 +89,4 @@ def delete(id: int, current_user: UserAuth, db: Session):
             detail="An error occurred while saving changes to the database.",
         )
     
-    return post
+    return None

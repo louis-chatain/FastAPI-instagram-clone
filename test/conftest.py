@@ -21,7 +21,7 @@ def engine():
 
 @pytest.fixture(scope="function")
 def session(engine: Engine):
-    try: # Clean up the database after before each test
+    try: # Clean up the database before each test
         Base.metadata.drop_all(bind=engine)
     finally:
         # Create the tables and a new session for each test

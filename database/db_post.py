@@ -35,11 +35,11 @@ def read_all(db: Session):
 
 
 def read_current_user(db: Session, current_user: UserAuth):
-    post = db.query(DbPost).filter_by(id=current_user.id).first()
+    post = db.query(DbPost).filter(DbPost.id == current_user.id).all()
     if not post:
-        raise HTTPException( #TODO if a user does not have any post, should not be a httpexception
+        raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No post with id {id} found or the post does not exist.", 
+            detail=f"No post were found or the post does not exist.", 
         )
     return post
 

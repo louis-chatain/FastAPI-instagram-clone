@@ -47,7 +47,7 @@ def read_all(db: Session = Depends(get_db)):
     return posts
 
 
-@router.get("/read_current_user", response_model=PostDisplay)
+@router.get("/read_current_user", response_model=List[PostDisplay])
 def read_current_user(
     db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)
 ):

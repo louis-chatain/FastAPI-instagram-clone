@@ -37,7 +37,7 @@ def create(
     return comment
 
 
-@router.get("/read_all", response_model=List[CommentDisplay])
+@router.get("/read_all", response_model=List[CommentDisplay], status_code=status.HTTP_200_OK)
 def read_all(db: Session = Depends(get_db)):
     comment = db_comment.read_all(db)
     return comment

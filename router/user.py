@@ -24,20 +24,20 @@ router = APIRouter(prefix="/user", tags=["user"])
                         "detail": "New User has been succefully added to the database."
                     }
                 }
-            },
-        },
+            }
+        }
     }
     )
 def create(request: UserModel, db: Session = Depends(get_db)):
     user = db_user.create(request, db)
     return user
 
-@router.get("/read_all", response_model=List[UserDisplay])
+@router.get("/read_all", response_model=List[UserDisplay], status_code=status.HTTP_200_OK)
 def read_all(db: Session = Depends(get_db)):
     users = db_user.read_all(db)
     return users
 
-@router.put("/update", response_model=None)
+@router.put("/update", response_model=None, status_code=status.HTTP_200_OK)
 def update(request: UserModel, db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)):
     user = db_user.update(request, db, current_user)
     return user

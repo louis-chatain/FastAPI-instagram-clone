@@ -41,13 +41,13 @@ def create(
     return post
 
 
-@router.get("/read_all", response_model=List[PostDisplay])
+@router.get("/read_all", response_model=List[PostDisplay], status_code=status.HTTP_200_OK)
 def read_all(db: Session = Depends(get_db)):
     posts = db_post.read_all(db)
     return posts
 
 
-@router.get("/read_current_user", response_model=List[PostDisplay])
+@router.get("/read_current_user", response_model=List[PostDisplay], status_code=status.HTTP_200_OK)
 def read_current_user(
     db: Session = Depends(get_db), current_user: UserAuth = Depends(get_current_user)
 ):
@@ -58,6 +58,7 @@ def read_current_user(
 @router.put(
     "/update",
     response_model=None,
+    status_code=status.HTTP_200_OK,
     responses={
         403: {
             "description": "Forbidden - User is not the author of this post or the post does not exist.",

@@ -1,7 +1,10 @@
 from fastapi.testclient import TestClient
 
-# from werkzeug.security import check_password_hash
-
+# def test_sqlalchemyerror_create_user(client: TestClient):
+#     response = client.post(
+#         "/user/create", json={"": "chat", "email": "chat", "password": "chat"}
+#     )
+#     assert response.status_code == 500
 
 def test_create_user(client: TestClient):
     response = client.post(
@@ -29,14 +32,11 @@ def test_read_all_user(client: TestClient):
     assert response.json()[0].get("id") == 1
     assert response.json()[0].get("username") == "chat"
     assert response.json()[0].get("email") == "chat"
-    # pwd: str = response.json()[0].get("hashed_password")
-    # assert check_password_hash(pwd, "cat") == True
     assert response.json()[0].get("posts") == []
 
     assert response.json()[1].get("id") == 2
     assert response.json()[1].get("username") == "cat"
     assert response.json()[1].get("email") == "cat"
-    # assert check_password_hash(response.json()[1].get("hashed_password"), "cat") == True
     assert response.json()[1].get("posts") == []
 
 
@@ -79,8 +79,6 @@ def test_update_user(client: TestClient):
     assert response.json()[0].get("id") == 1
     assert response.json()[0].get("username") == "chat"
     assert response.json()[0].get("email") == "test_update"
-    # pwd: str = response.json()[0].get("hashed_password")
-    # assert check_password_hash(pwd, "cat") == True
     assert response.json()[0].get("posts") == []
 
 

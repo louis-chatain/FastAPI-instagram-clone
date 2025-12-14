@@ -1,10 +1,19 @@
 from fastapi.testclient import TestClient
 
-# def test_sqlalchemyerror_create_user(client: TestClient):
-#     response = client.post(
-#         "/user/create", json={"": "chat", "email": "chat", "password": "chat"}
-#     )
-#     assert response.status_code == 500
+def test_sqlalchemyerror_create_user(client: TestClient):
+    client.post(
+        "/user/create", json={"username": "patate", "email": "chat", "password": "patate"}
+    )
+    response = client.post(
+        "/user/create", json={"username": "chat", "email": "chat", "password": "chat"}
+    )
+    assert response.status_code == 500
+
+def test_create_user_username_too_long(client: TestClient):
+    response = client.post(
+        "/user/create", json={"username": "00000000010000000002000000000300000000040", "email": "chat", "password": "patate"}
+    )
+    assert response.status_code == 422
 
 def test_create_user(client: TestClient):
     response = client.post(

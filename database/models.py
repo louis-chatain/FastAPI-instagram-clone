@@ -7,8 +7,8 @@ from .database import Base
 class DbUser(Base):
     __tablename__: str = "user"
     id: Column[int] = Column(Integer, primary_key=True, index=True)
-    username: Column[str] = Column(String)
-    email: Column[str] = Column(String) #TODO add a unique=True
+    username: Column[str] = Column(String(40))
+    email: Column[str] = Column(String, unique=True)
     hashed_password: Column[str] = Column(String)
 
     posts = relationship( # variable "items" must be the same in schemas_user

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from test_post import create_user, create_post
+from test_post import create_user, create_post, DATE
 
 
 def create_comment(access_token, client: TestClient):
@@ -37,14 +37,14 @@ def test_read_all(client: TestClient):
     comment_response = response.json()[0]
     assert comment_response.get("id") == 1
     assert comment_response.get("text") == "create1"
-    assert comment_response.get("timestamp") == "2025-12-13"
+    assert comment_response.get("timestamp") == DATE
     assert comment_response.get("user_id") == 1
     post_info = comment_response.get("post")
     assert post_info.get("id") == 1
     assert post_info.get("image_url") == "test1"
     assert post_info.get("image_url_type") == "test2"
     assert post_info.get("caption") == "test3"
-    assert post_info.get("timestamp") == "2025-12-13"
+    assert post_info.get("timestamp") == DATE
 
 
 def test_update_comment(client: TestClient):
@@ -66,14 +66,14 @@ def test_update_comment(client: TestClient):
     comment_response = response.json()[0]
     assert comment_response.get("id") == 1
     assert comment_response.get("text") == "update1"
-    assert comment_response.get("timestamp") == "2025-12-13"
+    assert comment_response.get("timestamp") == DATE
     assert comment_response.get("user_id") == 1
     post_info = comment_response.get("post")
     assert post_info.get("id") == 1
     assert post_info.get("image_url") == "test1"
     assert post_info.get("image_url_type") == "test2"
     assert post_info.get("caption") == "test3"
-    assert post_info.get("timestamp") == "2025-12-13"
+    assert post_info.get("timestamp") == DATE
 
 
 def test_delete_comment(client: TestClient):

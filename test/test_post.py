@@ -1,5 +1,7 @@
+from datetime import datetime
 from fastapi.testclient import TestClient
 
+DATE= datetime.now().date().isoformat()
 
 def create_user(client: TestClient):
     client.post(
@@ -45,7 +47,7 @@ def test_read_current_user(client: TestClient):
     assert response_value.get("image_url") == "test1"
     assert response_value.get("image_url_type") == "test2"
     assert response_value.get("caption") == "test3"
-    assert response_value.get("timestamp") == "2025-12-13"
+    assert response_value.get("timestamp") == DATE
     user_info = response_value.get("users")
     assert user_info.get("id") == 1
     assert user_info.get("username") == "chat"
@@ -65,7 +67,7 @@ def test_read_all_post(client: TestClient):
     assert response_value.get("image_url") == "test1"
     assert response_value.get("image_url_type") == "test2"
     assert response_value.get("caption") == "test3"
-    assert response_value.get("timestamp") == "2025-12-13"
+    assert response_value.get("timestamp") == DATE
     user_info = response_value.get("users")
     assert user_info.get("id") == 1
     assert user_info.get("username") == "chat"
@@ -96,7 +98,7 @@ def test_update_post(client: TestClient):
     assert response_value.get("image_url") == "update1"
     assert response_value.get("image_url_type") == "update2"
     assert response_value.get("caption") == "update3"
-    assert response_value.get("timestamp") == "2025-12-13"
+    assert response_value.get("timestamp") == DATE
     user_info = response_value.get("users")
     assert user_info.get("id") == 1
     assert user_info.get("username") == "chat"

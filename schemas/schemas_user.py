@@ -1,10 +1,10 @@
 from datetime import date
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserModel(BaseModel):  # data that we will demand/receive from the front-end guy/user
-    username: str
+    username: str = Field(Ellipsis, max_length=40)
     email: str
     password: str
 
